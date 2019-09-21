@@ -1,0 +1,23 @@
+{
+	"FileVersion": 3,
+	"Version": 1,
+	"VersionName": "0.1",
+	"FriendlyName": "Unreal Engine ROS Plugin",
+	"Description": "Provides a ROS message publish/subscribe interface over TCP using the rosbridge protocol.",
+	"Category": "ROS",
+	"CreatedBy": "Abyss Robotics",
+	"CreatedByURL": "https://github.com/AbyssRobotics/UnrealROS",
+	"DocsURL": "",
+	"MarketplaceURL": "",
+	"SupportURL": "",
+	"CanContainContent": false,
+	"IsBetaVersion": true,
+	"Installed": false,
+	"Modules": [
+		{
+			"Name": "UnrealROS",
+			"Type": "Developer",
+			"LoadingPhase": "Default"
+		}
+	]
+}

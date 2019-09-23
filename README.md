@@ -1,2 +1,2 @@
 # UnrealROS
-An Unreal Engine plugin that provides a ROS message publish/subscribe interface over TCP using the rosbridge protocol.
+An Unreal Engine plugin that provides a ROS message publish/subscribe interface over TCP using the rosbridge protocol. Currently under construction.

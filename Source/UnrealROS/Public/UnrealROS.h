@@ -2,7 +2,7 @@
 
 #include "ModuleManager.h"
 
-class UnrealROSImpl : public IModuleInterface
+class FUnrealROSModule : public IModuleInterface
 {
 
 public:

@@ -7,17 +7,17 @@
 	"Category": "ROS",
 	"CreatedBy": "Abyss Robotics",
 	"CreatedByURL": "https://github.com/AbyssRobotics/UnrealROS",
-	"DocsURL": "",
+	"DocsURL": "https://github.com/AbyssRobotics/UnrealROS",
 	"MarketplaceURL": "",
-	"SupportURL": "",
-	"CanContainContent": false,
+	"SupportURL": "https://github.com/AbyssRobotics/UnrealROS",
+	"CanContainContent": true,
 	"IsBetaVersion": true,
 	"Installed": false,
 	"Modules": [
 		{
 			"Name": "UnrealROS",
-			"Type": "Developer",
-			"LoadingPhase": "Default"
+			"Type": "Runtime",
+			"LoadingPhase": "PreLoadingScreen"
 		}
 	]
 }

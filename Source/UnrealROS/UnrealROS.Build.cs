@@ -1,14 +1,54 @@
+
 using UnrealBuildTool;
-using System.IO;
 
 public class UnrealROS : ModuleRules
 {
     public UnrealROS(ReadOnlyTargetRules Target) : base(Target)
     {
-        PrivateIncludePaths.AddRange(new string[] { "UnrealROS/Private" });
-        //PublicIncludePaths.AddRange(new string[] { "UnrealROS/Public" });
-        PublicDependencyModuleNames.AddRange(new string[] { "Engine", "Core" });
-		PrivatePCHHeaderFile = "Private/UnrealROSPrivatePCH.h";
+        PCHUsage = ModuleRules.PCHUsageMode.UseExplicitOrSharedPCHs;
 
+        PublicIncludePaths.AddRange(
+            new string[] {
+				// ... add public include paths required here ...
+			}
+            );
+
+
+        PrivateIncludePaths.AddRange(
+            new string[] {
+				// ... add other private include paths required here ...
+			}
+            );
+
+
+        PublicDependencyModuleNames.AddRange(
+            new string[]
+            {
+                "Core",
+				// ... add other public dependencies that you statically link with here ...
+			}
+            );
+
+
+        PrivateDependencyModuleNames.AddRange(
+            new string[]
+            {
+                "CoreUObject",
+                "Engine",
+                "Slate",
+                "SlateCore",
+                "Sockets",
+                "Networking"
+				// ... add private dependencies that you statically link with here ...	
+			}
+            );
+
+
+        DynamicallyLoadedModuleNames.AddRange(
+            new string[]
+            {
+				// ... add any modules that your module loads dynamically here ...
+			}
+            );
     }
 }

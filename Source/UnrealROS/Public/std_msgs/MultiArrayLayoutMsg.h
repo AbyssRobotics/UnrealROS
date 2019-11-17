@@ -1,7 +1,7 @@
 //==============================================================================
 // Unreal ROS Plugin
 //
-// Description: Defines the std_msgs/MultiArrayDimension ROS message and its 
+// Description: Defines the std_msgs/MultiArrayLayout ROS message and its 
 //              interface with JSON.
 //==============================================================================
 #pragma once
@@ -9,16 +9,19 @@
 // ROS message base class
 #include "RosMessageBase.h"
 
+// Message dependencies
+#include "MultiArrayDimensionMsg.h"
+
 // UE4 imports
 #include "CoreMinimal.h"
-#include "MultiArrayDimension.generated.h"
+#include "MultiArrayLayoutMsg.generated.h"
 
 //==============================================================================
 //                              CLASS DECLARATION
 //==============================================================================
 
 UCLASS(BlueprintType)
-class UNREALROS_API UMultiArrayDimension : public URosMessageBase
+class UNREALROS_API UMultiArrayLayoutMsg : public URosMessageBase
 {
 
 	GENERATED_BODY()
@@ -26,19 +29,19 @@ class UNREALROS_API UMultiArrayDimension : public URosMessageBase
 public:
 
 	//--------------------------------------------------------------------------
-	// Name:        UMultiArrayDimension constructor
+	// Name:        UMultiArrayLayoutMsg constructor
 	// Description: Default constructor.
 	//--------------------------------------------------------------------------
-	UMultiArrayDimension() : URosMessageBase("std_msgs/MultiArrayDimension")
+	UMultiArrayLayoutMsg() : URosMessageBase("std_msgs/MultiArrayLayout")
 	{
 
 	};
 
 	//--------------------------------------------------------------------------
-	// Name:        UMultiArrayDimension destructor
+	// Name:        UMultiArrayLayoutMsg destructor
 	// Description: Default destructor.
 	//--------------------------------------------------------------------------
-	~UMultiArrayDimension() override
+	~UMultiArrayLayoutMsg() override
 	{
 
 	}
@@ -50,11 +53,18 @@ public:
 	//--------------------------------------------------------------------------
 	json get_json() override
 	{
+
 		json json;
-		json["label"] = std::string(TCHAR_TO_UTF8(*m_label));
-		json["size"] = m_size;
-		json["stride"] = m_stride;
+
+		auto dim_array = json::array();
+		for (int i = 0; i < m_dim.Num(); ++i)
+			dim_array.push_back(m_dim[i]->get_json());
+
+		json["dim"] = dim_array;
+		json["data_offset"] = m_data_offset;
+
 		return json;
+
 	}
 
 	//--------------------------------------------------------------------------
@@ -62,12 +72,22 @@ public:
 	// Description: Populates the message fields from the given JSON object.
 	// Arguments:   - json: JSON object to populate message fields from
 	//--------------------------------------------------------------------------
-	void from_json(json json) override
+	void from_json(json json_message) override
 	{
-		std::string label_string = json["label"];
-		m_label = FString(label_string.c_str());
-		m_size = json["size"];
-		m_stride = json["stride"];
+
+		json dim_array = json_message["dim"];
+		std::string test = dim_array.dump();
+		TArray<UMultiArrayDimensionMsg*> dim;
+		for (const auto& item : dim_array)
+		{
+			UMultiArrayDimensionMsg* new_dim = NewObject<UMultiArrayDimensionMsg>();
+			new_dim->from_json(item);
+			dim.Push(new_dim);
+		}
+
+		m_dim = dim;
+		m_data_offset = json_message["data_offset"];
+
 	}
 
 	//--------------------------------------------------------------------------
@@ -76,11 +96,10 @@ public:
 	// Arguments:   - data: message data
 	//--------------------------------------------------------------------------
 	UFUNCTION(BlueprintPure, Category = "ROS")
-		void get_contents(FString& label, int& size, int& stride)
+	void get_contents(TArray<UMultiArrayDimensionMsg*>& dim, int& data_offset)
 	{
-		label = m_label;
-		size = static_cast<int>(m_size);
-		stride = static_cast<int>(m_stride);
+		dim = m_dim;
+		data_offset = static_cast<int>(m_data_offset);
 	}
 
 	//--------------------------------------------------------------------------
@@ -89,22 +108,18 @@ public:
 	// Arguments:   - data: message data
 	//--------------------------------------------------------------------------
 	UFUNCTION(BlueprintCallable, Category = "ROS")
-		void set_contents(FString label, int size, int stride)
+	void set_contents(TArray<UMultiArrayDimensionMsg*> dim, int data_offset)
 	{
-		m_label = label;
-		m_size = static_cast<uint32>(size);
-		m_stride = static_cast<uint32>(stride);
+		m_dim = dim;
+		m_data_offset = static_cast<uint32>(data_offset);
 	}
 
 private:
 
-	// Label of given dimension
-	FString m_label;
+	// Array of dimension properties
+	TArray<UMultiArrayDimensionMsg*> m_dim;
 
-	// Size of given dimension(in type units)
-	uint32 m_size;
-
-	// Stride of given dimension
-	uint32 m_stride;
+	// Padding elements at front of data
+	uint32 m_data_offset;
 
 };

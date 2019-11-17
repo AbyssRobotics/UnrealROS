@@ -1,22 +1,25 @@
 //==============================================================================
 // Unreal ROS Plugin
 //
-// Description: Defines the std_msgs/Empty ROS message and its 
-//              interface with JSON.
+// Description: Defines the std_msgs/Byte ROS message and its interface with
+//              JSON.
 //==============================================================================
 
 #pragma once
 
-#include "CoreMinimal.h"
+// ROS message base class
 #include "RosMessageBase.h"
-#include "Empty.generated.h"
+
+// UE4 imports
+#include "CoreMinimal.h"
+#include "ByteMsg.generated.h"
 
 //==============================================================================
 //                              CLASS DECLARATION
 //==============================================================================
 
 UCLASS(BlueprintType)
-class UNREALROS_API UEmpty : public URosMessageBase
+class UNREALROS_API UByteMsg : public URosMessageBase
 {
 
 	GENERATED_BODY()
@@ -24,19 +27,19 @@ class UNREALROS_API UEmpty : public URosMessageBase
 public:
 
 	//--------------------------------------------------------------------------
-	// Name:        UEmpty constructor
+	// Name:        UByteMsg constructor
 	// Description: Default constructor.
 	//--------------------------------------------------------------------------
-	UEmpty() : URosMessageBase("std_msgs/Empty")
+	UByteMsg() : URosMessageBase("std_msgs/Byte")
 	{
 
 	};
 
 	//--------------------------------------------------------------------------
-	// Name:        UEmpty destructor
+	// Name:        UByteMsg destructor
 	// Description: Default destructor.
 	//--------------------------------------------------------------------------
-	~UEmpty() override
+	~UByteMsg() override
 	{
 
 	}
@@ -49,6 +52,7 @@ public:
 	json get_json() override
 	{
 		json json;
+		json["data"] = m_data;
 		return json;
 	}
 
@@ -59,7 +63,7 @@ public:
 	//--------------------------------------------------------------------------
 	void from_json(json json) override
 	{
-
+		m_data = json["data"];
 	}
 
 	//--------------------------------------------------------------------------
@@ -70,7 +74,7 @@ public:
 	UFUNCTION(BlueprintPure, Category = "ROS")
 		void get_contents(int& data)
 	{
-
+		data = static_cast<int>(m_data);
 	}
 
 	//--------------------------------------------------------------------------
@@ -81,11 +85,11 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "ROS")
 		void set_contents(int data)
 	{
-
+		m_data = static_cast<int8>(data);
 	}
 
 private:
 
-
+	int8 m_data;
 
 };

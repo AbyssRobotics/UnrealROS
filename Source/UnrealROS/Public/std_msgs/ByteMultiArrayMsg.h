@@ -1,25 +1,22 @@
 //==============================================================================
 // Unreal ROS Plugin
 //
-// Description: Defines the std_msgs/Bool ROS message and its interface with
-//              JSON.
+// Description: Defines the std_msgs/ByteMultiArray ROS message and its 
+//              interface with JSON.
 //==============================================================================
 
 #pragma once
 
-// ROS message base class
-#include "RosMessageBase.h"
-
-// UE4 imports
 #include "CoreMinimal.h"
-#include "Bool.generated.h"
+#include "RosMessageBase.h"
+#include "ByteMultiArrayMsg.generated.h"
 
 //==============================================================================
 //                              CLASS DECLARATION
 //==============================================================================
 
 UCLASS(BlueprintType)
-class UNREALROS_API UBool : public URosMessageBase
+class UNREALROS_API UByteMultiArrayMsg : public URosMessageBase
 {
 
 	GENERATED_BODY()
@@ -27,19 +24,19 @@ class UNREALROS_API UBool : public URosMessageBase
 public:
 
 	//--------------------------------------------------------------------------
-	// Name:        UBool constructor
+	// Name:        UByteMultiArrayMsg constructor
 	// Description: Default constructor.
 	//--------------------------------------------------------------------------
-	UBool() : URosMessageBase("std_msgs/Bool")
+	UByteMultiArrayMsg() : URosMessageBase("std_msgs/ByteMultiArray")
 	{
 
 	};
 
 	//--------------------------------------------------------------------------
-	// Name:        UBool destructor
+	// Name:        UByteMultiArrayMsg destructor
 	// Description: Default destructor.
 	//--------------------------------------------------------------------------
-	~UBool() override
+	~UByteMultiArrayMsg() override
 	{
 
 	}
@@ -52,7 +49,6 @@ public:
 	json get_json() override
 	{
 		json json;
-		json["data"] = m_data;
 		return json;
 	}
 
@@ -63,7 +59,7 @@ public:
 	//--------------------------------------------------------------------------
 	void from_json(json json) override
 	{
-		m_data = json["data"];
+
 	}
 
 	//--------------------------------------------------------------------------
@@ -72,9 +68,9 @@ public:
 	// Arguments:   - data: message data
 	//--------------------------------------------------------------------------
 	UFUNCTION(BlueprintPure, Category = "ROS")
-	void get_contents(bool& data)
+	void get_contents(int& data)
 	{
-		data = m_data;
+
 	}
 
 	//--------------------------------------------------------------------------
@@ -83,13 +79,13 @@ public:
 	// Arguments:   - data: message data
 	//--------------------------------------------------------------------------
 	UFUNCTION(BlueprintCallable, Category = "ROS")
-	void set_contents(bool data)
+	void set_contents(int data)
 	{
-		m_data = data;
+
 	}
 
 private:
 
-	bool m_data;
+
 
 };

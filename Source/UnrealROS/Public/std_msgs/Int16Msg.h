@@ -1,24 +1,22 @@
 //==============================================================================
 // Unreal ROS Plugin
 //
-// Description: Defines the std_msgs/Float64 ROS message and its interface with
-//              JSON.
+// Description: Defines the std_msgs/Int16 ROS message and its 
+//              interface with JSON.
 //==============================================================================
+
 #pragma once
 
-// ROS message base class
-#include "RosMessageBase.h"
-
-// UE4 imports
 #include "CoreMinimal.h"
-#include "Float64.generated.h"
+#include "RosMessageBase.h"
+#include "Int16Msg.generated.h"
 
 //==============================================================================
 //                              CLASS DECLARATION
 //==============================================================================
 
 UCLASS(BlueprintType)
-class UNREALROS_API UFloat64 : public URosMessageBase
+class UNREALROS_API UInt16Msg : public URosMessageBase
 {
 
 	GENERATED_BODY()
@@ -26,19 +24,19 @@ class UNREALROS_API UFloat64 : public URosMessageBase
 public:
 
 	//--------------------------------------------------------------------------
-	// Name:        UFloat64 constructor
+	// Name:        UInt16Msg constructor
 	// Description: Default constructor.
 	//--------------------------------------------------------------------------
-	UFloat64() : URosMessageBase("std_msgs/Float64")
+	UInt16Msg() : URosMessageBase("std_msgs/Int16")
 	{
 
-	}
+	};
 
 	//--------------------------------------------------------------------------
-	// Name:        UFloat64 destructor
+	// Name:        UInt16Msg destructor
 	// Description: Default destructor.
 	//--------------------------------------------------------------------------
-	~UFloat64() override
+	~UInt16Msg() override
 	{
 
 	}
@@ -51,7 +49,6 @@ public:
 	json get_json() override
 	{
 		json json;
-		json["data"] = m_data;
 		return json;
 	}
 
@@ -62,7 +59,7 @@ public:
 	//--------------------------------------------------------------------------
 	void from_json(json json) override
 	{
-		m_data = json["data"];
+
 	}
 
 	//--------------------------------------------------------------------------
@@ -71,9 +68,9 @@ public:
 	// Arguments:   - data: message data
 	//--------------------------------------------------------------------------
 	UFUNCTION(BlueprintPure, Category = "ROS")
-	void get_contents(float& data)
+		void get_contents(int& data)
 	{
-		data = static_cast<float>(m_data);
+
 	}
 
 	//--------------------------------------------------------------------------
@@ -82,13 +79,13 @@ public:
 	// Arguments:   - data: message data
 	//--------------------------------------------------------------------------
 	UFUNCTION(BlueprintCallable, Category = "ROS")
-	void set_contents(float data)
+		void set_contents(int data)
 	{
-		m_data = static_cast<double>(data);
+
 	}
 
 private:
 
-	double m_data;
+
 
 };

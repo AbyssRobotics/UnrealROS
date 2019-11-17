@@ -1,7 +1,7 @@
 //==============================================================================
 // Unreal ROS Plugin
 //
-// Description: Defines the std_msgs/Int64 ROS message and its 
+// Description: Defines the std_msgs/Empty ROS message and its 
 //              interface with JSON.
 //==============================================================================
 
@@ -9,14 +9,14 @@
 
 #include "CoreMinimal.h"
 #include "RosMessageBase.h"
-#include "Int64.generated.h"
+#include "EmptyMsg.generated.h"
 
 //==============================================================================
 //                              CLASS DECLARATION
 //==============================================================================
 
 UCLASS(BlueprintType)
-class UNREALROS_API UInt64 : public URosMessageBase
+class UNREALROS_API UEmptyMsg : public URosMessageBase
 {
 
 	GENERATED_BODY()
@@ -24,19 +24,19 @@ class UNREALROS_API UInt64 : public URosMessageBase
 public:
 
 	//--------------------------------------------------------------------------
-	// Name:        UInt64 constructor
+	// Name:        UEmptyMsg constructor
 	// Description: Default constructor.
 	//--------------------------------------------------------------------------
-	UInt64() : URosMessageBase("std_msgs/Int64")
+	UEmptyMsg() : URosMessageBase("std_msgs/Empty")
 	{
 
 	};
 
 	//--------------------------------------------------------------------------
-	// Name:        UInt64 destructor
+	// Name:        UEmptyMsg destructor
 	// Description: Default destructor.
 	//--------------------------------------------------------------------------
-	~UInt64() override
+	~UEmptyMsg() override
 	{
 
 	}

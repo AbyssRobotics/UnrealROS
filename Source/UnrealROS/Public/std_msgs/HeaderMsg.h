@@ -1,7 +1,7 @@
 //==============================================================================
 // Unreal ROS Plugin
 //
-// Description: Defines the std_msgs/ByteMultiArray ROS message and its 
+// Description: Defines the std_msgs/Header ROS message and its 
 //              interface with JSON.
 //==============================================================================
 
@@ -9,14 +9,14 @@
 
 #include "CoreMinimal.h"
 #include "RosMessageBase.h"
-#include "ByteMultiArray.generated.h"
+#include "HeaderMsg.generated.h"
 
 //==============================================================================
 //                              CLASS DECLARATION
 //==============================================================================
 
 UCLASS(BlueprintType)
-class UNREALROS_API UByteMultiArray : public URosMessageBase
+class UNREALROS_API UHeaderMsg : public URosMessageBase
 {
 
 	GENERATED_BODY()
@@ -24,19 +24,19 @@ class UNREALROS_API UByteMultiArray : public URosMessageBase
 public:
 
 	//--------------------------------------------------------------------------
-	// Name:        UByteMultiArray constructor
+	// Name:        UHeaderMsg constructor
 	// Description: Default constructor.
 	//--------------------------------------------------------------------------
-	UByteMultiArray() : URosMessageBase("std_msgs/ByteMultiArray")
+	UHeaderMsg() : URosMessageBase("std_msgs/Header")
 	{
 
 	};
 
 	//--------------------------------------------------------------------------
-	// Name:        UByteMultiArray destructor
+	// Name:        UHeaderMsg destructor
 	// Description: Default destructor.
 	//--------------------------------------------------------------------------
-	~UByteMultiArray() override
+	~UHeaderMsg() override
 	{
 
 	}
@@ -68,7 +68,7 @@ public:
 	// Arguments:   - data: message data
 	//--------------------------------------------------------------------------
 	UFUNCTION(BlueprintPure, Category = "ROS")
-	void get_contents(int& data)
+		void get_contents(int& data)
 	{
 
 	}
@@ -79,7 +79,7 @@ public:
 	// Arguments:   - data: message data
 	//--------------------------------------------------------------------------
 	UFUNCTION(BlueprintCallable, Category = "ROS")
-	void set_contents(int data)
+		void set_contents(int data)
 	{
 
 	}

@@ -1,27 +1,22 @@
 //==============================================================================
 // Unreal ROS Plugin
 //
-// Description: Defines the std_msgs/Float64MultiArray ROS message and its 
+// Description: Defines the std_msgs/Int64 ROS message and its 
 //              interface with JSON.
 //==============================================================================
+
 #pragma once
 
-// ROS message base class
-#include "RosMessageBase.h"
-
-// Message dependencies
-#include "MultiArrayLayout.h"
-
-// UE4 imports
 #include "CoreMinimal.h"
-#include "Float64MultiArray.generated.h"
+#include "RosMessageBase.h"
+#include "Int64Msg.generated.h"
 
 //==============================================================================
 //                              CLASS DECLARATION
 //==============================================================================
 
 UCLASS(BlueprintType)
-class UNREALROS_API UFloat64MultiArray : public URosMessageBase
+class UNREALROS_API UInt64Msg : public URosMessageBase
 {
 
 	GENERATED_BODY()
@@ -29,19 +24,19 @@ class UNREALROS_API UFloat64MultiArray : public URosMessageBase
 public:
 
 	//--------------------------------------------------------------------------
-	// Name:        UFloat64MultiArray constructor
+	// Name:        UInt64Msg constructor
 	// Description: Default constructor.
 	//--------------------------------------------------------------------------
-	UFloat64MultiArray() : URosMessageBase("std_msgs/Float64MultiArray")
+	UInt64Msg() : URosMessageBase("std_msgs/Int64")
 	{
 
 	};
 
 	//--------------------------------------------------------------------------
-	// Name:        UFloat64MultiArray destructor
+	// Name:        UInt64Msg destructor
 	// Description: Default destructor.
 	//--------------------------------------------------------------------------
-	~UFloat64MultiArray() override
+	~UInt64Msg() override
 	{
 
 	}
@@ -54,11 +49,7 @@ public:
 	json get_json() override
 	{
 		json json;
-		json["layout"] = m_layout->get_json();
-		for (double item : m_data)
-			json["data"].push_back(item);
 		return json;
-
 	}
 
 	//--------------------------------------------------------------------------
@@ -66,16 +57,8 @@ public:
 	// Description: Populates the message fields from the given JSON object.
 	// Arguments:   - json: JSON object to populate message fields from
 	//--------------------------------------------------------------------------
-	void from_json(json json_message) override
+	void from_json(json json) override
 	{
-
-		UMultiArrayLayout* layout = NewObject<UMultiArrayLayout>();
-		layout->from_json(json_message["layout"]);
-		m_layout = layout;
-
-		m_data.Empty();
-		for (double item : json_message["data"])
-			m_data.Push(item);
 
 	}
 
@@ -85,12 +68,8 @@ public:
 	// Arguments:   - data: message data
 	//--------------------------------------------------------------------------
 	UFUNCTION(BlueprintPure, Category = "ROS")
-	void get_contents(UMultiArrayLayout*& layout, TArray<float>& data)
+		void get_contents(int& data)
 	{
-		layout = m_layout;
-		data.Empty();
-		for (size_t i = 0; i < m_data.Num(); i++)
-			data.Add(static_cast<float>(m_data[i]));
 
 	}
 
@@ -100,20 +79,13 @@ public:
 	// Arguments:   - data: message data
 	//--------------------------------------------------------------------------
 	UFUNCTION(BlueprintCallable, Category = "ROS")
-	void set_contents(UMultiArrayLayout* layout, TArray<float> data)
+		void set_contents(int data)
 	{
-		m_layout = layout;
-		m_data.Empty();
-		for (size_t i = 0; i < data.Num(); i++)
-			m_data.Add(static_cast<double>(data[i]));
+
 	}
 
 private:
 
-	// Specification of data layout
-	UMultiArrayLayout* m_layout;
 
-	// Array of data
-	TArray<double> m_data;
 
 };

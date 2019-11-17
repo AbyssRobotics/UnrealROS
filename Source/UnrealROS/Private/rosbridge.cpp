@@ -184,8 +184,15 @@ void URosbridge::publish(FString topic, UPARAM(ref) URosMessageBase* message)
 //                the topic
 //------------------------------------------------------------------------------
 void URosbridge::subscribe(FString topic, TSubclassOf<URosMessageBase> message_type,
-						 const FMessageReceivedCallback& callback)
+						   const FMessageReceivedCallback& callback)
 {
+
+	// Ensure the message type is selected
+	if (message_type == NULL)
+	{
+		print(FColor::Red, FString::Printf(TEXT("subscribe: message type must be selected")));
+		return;
+	}
 
 	// Ensure the TCP socket is connected
 	if (!socket_connected)
@@ -463,7 +470,9 @@ void URosbridge::handle_received_json(nlohmann::json json_message)
 	catch (const std::exception& ex)
 	{
 		FString reason(ex.what());
-		print(FColor::Yellow, FString::Printf(TEXT("handle_received_json: failed to parse JSON message (%s)"), *reason));
+		std::string json_string = json_message.dump();
+		FString json_fstring = FString(json_string.c_str());
+		print(FColor::Yellow, FString::Printf(TEXT("handle_received_json: failed to parse JSON message (%s)(%s)"), *reason, *json_fstring));
 	}
 
 }

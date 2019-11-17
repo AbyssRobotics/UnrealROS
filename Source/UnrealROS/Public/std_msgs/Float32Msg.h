@@ -1,7 +1,7 @@
 //==============================================================================
 // Unreal ROS Plugin
 //
-// Description: Defines the std_msgs/Int32MultiArray ROS message and its 
+// Description: Defines the std_msgs/Float32 ROS message and its 
 //              interface with JSON.
 //==============================================================================
 
@@ -9,14 +9,14 @@
 
 #include "CoreMinimal.h"
 #include "RosMessageBase.h"
-#include "Int32MultiArray.generated.h"
+#include "Float32Msg.generated.h"
 
 //==============================================================================
 //                              CLASS DECLARATION
 //==============================================================================
 
 UCLASS(BlueprintType)
-class UNREALROS_API UInt32MultiArray : public URosMessageBase
+class UNREALROS_API UFloat32Msg : public URosMessageBase
 {
 
 	GENERATED_BODY()
@@ -24,19 +24,19 @@ class UNREALROS_API UInt32MultiArray : public URosMessageBase
 public:
 
 	//--------------------------------------------------------------------------
-	// Name:        UInt32MultiArray constructor
+	// Name:        UFloat32Msg constructor
 	// Description: Default constructor.
 	//--------------------------------------------------------------------------
-	UInt32MultiArray() : URosMessageBase("std_msgs/Int32MultiArray")
+	UFloat32Msg() : URosMessageBase("std_msgs/Float32")
 	{
 
 	};
 
 	//--------------------------------------------------------------------------
-	// Name:        UInt32MultiArray destructor
+	// Name:        UFloat32Msg destructor
 	// Description: Default destructor.
 	//--------------------------------------------------------------------------
-	~UInt32MultiArray() override
+	~UFloat32Msg() override
 	{
 
 	}

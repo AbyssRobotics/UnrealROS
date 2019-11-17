@@ -1,22 +1,24 @@
 //==============================================================================
 // Unreal ROS Plugin
 //
-// Description: Defines the std_msgs/Duration ROS message and its 
+// Description: Defines the std_msgs/MultiArrayDimension ROS message and its 
 //              interface with JSON.
 //==============================================================================
-
 #pragma once
 
-#include "CoreMinimal.h"
+// ROS message base class
 #include "RosMessageBase.h"
-#include "Duration.generated.h"
+
+// UE4 imports
+#include "CoreMinimal.h"
+#include "MultiArrayDimensionMsg.generated.h"
 
 //==============================================================================
 //                              CLASS DECLARATION
 //==============================================================================
 
 UCLASS(BlueprintType)
-class UNREALROS_API UDuration : public URosMessageBase
+class UNREALROS_API UMultiArrayDimensionMsg : public URosMessageBase
 {
 
 	GENERATED_BODY()
@@ -24,19 +26,19 @@ class UNREALROS_API UDuration : public URosMessageBase
 public:
 
 	//--------------------------------------------------------------------------
-	// Name:        UDuration constructor
+	// Name:        UMultiArrayDimensionMsg constructor
 	// Description: Default constructor.
 	//--------------------------------------------------------------------------
-	UDuration() : URosMessageBase("std_msgs/Duration")
+	UMultiArrayDimensionMsg() : URosMessageBase("std_msgs/MultiArrayDimension")
 	{
 
 	};
 
 	//--------------------------------------------------------------------------
-	// Name:        UDuration destructor
+	// Name:        UMultiArrayDimensionMsg destructor
 	// Description: Default destructor.
 	//--------------------------------------------------------------------------
-	~UDuration() override
+	~UMultiArrayDimensionMsg() override
 	{
 
 	}
@@ -49,6 +51,9 @@ public:
 	json get_json() override
 	{
 		json json;
+		json["label"] = std::string(TCHAR_TO_UTF8(*m_label));
+		json["size"] = m_size;
+		json["stride"] = m_stride;
 		return json;
 	}
 
@@ -59,7 +64,10 @@ public:
 	//--------------------------------------------------------------------------
 	void from_json(json json) override
 	{
-
+		std::string label_string = json["label"];
+		m_label = FString(label_string.c_str());
+		m_size = json["size"];
+		m_stride = json["stride"];
 	}
 
 	//--------------------------------------------------------------------------
@@ -68,9 +76,11 @@ public:
 	// Arguments:   - data: message data
 	//--------------------------------------------------------------------------
 	UFUNCTION(BlueprintPure, Category = "ROS")
-		void get_contents(int& data)
+		void get_contents(FString& label, int& size, int& stride)
 	{
-
+		label = m_label;
+		size = static_cast<int>(m_size);
+		stride = static_cast<int>(m_stride);
 	}
 
 	//--------------------------------------------------------------------------
@@ -79,13 +89,22 @@ public:
 	// Arguments:   - data: message data
 	//--------------------------------------------------------------------------
 	UFUNCTION(BlueprintCallable, Category = "ROS")
-		void set_contents(int data)
+		void set_contents(FString label, int size, int stride)
 	{
-
+		m_label = label;
+		m_size = static_cast<uint32>(size);
+		m_stride = static_cast<uint32>(stride);
 	}
 
 private:
 
+	// Label of given dimension
+	FString m_label;
 
+	// Size of given dimension(in type units)
+	uint32 m_size;
+
+	// Stride of given dimension
+	uint32 m_stride;
 
 };

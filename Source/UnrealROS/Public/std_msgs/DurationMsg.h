@@ -1,7 +1,7 @@
 //==============================================================================
 // Unreal ROS Plugin
 //
-// Description: Defines the std_msgs/ColorRGBA ROS message and its 
+// Description: Defines the std_msgs/Duration ROS message and its 
 //              interface with JSON.
 //==============================================================================
 
@@ -9,14 +9,14 @@
 
 #include "CoreMinimal.h"
 #include "RosMessageBase.h"
-#include "ColorRGBA.generated.h"
+#include "DurationMsg.generated.h"
 
 //==============================================================================
 //                              CLASS DECLARATION
 //==============================================================================
 
 UCLASS(BlueprintType)
-class UNREALROS_API UColorRGBA : public URosMessageBase
+class UNREALROS_API UDurationMsg : public URosMessageBase
 {
 
 	GENERATED_BODY()
@@ -24,19 +24,19 @@ class UNREALROS_API UColorRGBA : public URosMessageBase
 public:
 
 	//--------------------------------------------------------------------------
-	// Name:        UColorRGBA constructor
+	// Name:        UDurationMsg constructor
 	// Description: Default constructor.
 	//--------------------------------------------------------------------------
-	UColorRGBA() : URosMessageBase("std_msgs/ColorRGBA")
+	UDurationMsg() : URosMessageBase("std_msgs/Duration")
 	{
 
 	};
 
 	//--------------------------------------------------------------------------
-	// Name:        UColorRGBA destructor
+	// Name:        UDurationMsg destructor
 	// Description: Default destructor.
 	//--------------------------------------------------------------------------
-	~UColorRGBA() override
+	~UDurationMsg() override
 	{
 
 	}

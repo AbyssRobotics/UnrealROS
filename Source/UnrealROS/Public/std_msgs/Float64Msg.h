@@ -1,27 +1,24 @@
 //==============================================================================
 // Unreal ROS Plugin
 //
-// Description: Defines the sensor_msgs/Joy ROS message and its 
-//              interface with JSON.
+// Description: Defines the std_msgs/Float64 ROS message and its interface with
+//              JSON.
 //==============================================================================
 #pragma once
 
 // ROS message base class
 #include "RosMessageBase.h"
 
-// Message dependencies
-#include "std_msgs/Header.h"
-
 // UE4 imports
 #include "CoreMinimal.h"
-#include "Joy.generated.h"
+#include "Float64Msg.generated.h"
 
 //==============================================================================
 //                              CLASS DECLARATION
 //==============================================================================
 
 UCLASS(BlueprintType)
-class UNREALROS_API UJoy : public URosMessageBase
+class UNREALROS_API UFloat64Msg : public URosMessageBase
 {
 
 	GENERATED_BODY()
@@ -29,19 +26,19 @@ class UNREALROS_API UJoy : public URosMessageBase
 public:
 
 	//--------------------------------------------------------------------------
-	// Name:        UJoy constructor
+	// Name:        UFloat64Msg constructor
 	// Description: Default constructor.
 	//--------------------------------------------------------------------------
-	UJoy() : URosMessageBase("sensor_msgs/Joy")
+	UFloat64Msg() : URosMessageBase("std_msgs/Float64")
 	{
 
-	};
+	}
 
 	//--------------------------------------------------------------------------
-	// Name:        UJoy destructor
+	// Name:        UFloat64Msg destructor
 	// Description: Default destructor.
 	//--------------------------------------------------------------------------
-	~UJoy() override
+	~UFloat64Msg() override
 	{
 
 	}
@@ -54,13 +51,8 @@ public:
 	json get_json() override
 	{
 		json json;
-		json["header"] = m_header->get_json();
-		for (float item : m_axes)
-			json["axes"].push_back(item);
-		for (uint32_t item : m_buttons)
-			json["buttons"].push_back(item);
+		json["data"] = m_data;
 		return json;
-
 	}
 
 	//--------------------------------------------------------------------------
@@ -68,21 +60,9 @@ public:
 	// Description: Populates the message fields from the given JSON object.
 	// Arguments:   - json: JSON object to populate message fields from
 	//--------------------------------------------------------------------------
-	void from_json(json json_message) override
+	void from_json(json json) override
 	{
-
-		UHeader* header = NewObject<UHeader>();
-		header->from_json(json_message["header"]);
-		m_header = header;
-
-		m_axes.Empty();
-		for (float item : json_message["axes"])
-			m_axes.Push(item);
-
-		m_buttons.Empty();
-		for (uint32_t item : json_message["buttons"])
-			m_buttons.Push(item);
-
+		m_data = json["data"];
 	}
 
 	//--------------------------------------------------------------------------
@@ -91,14 +71,9 @@ public:
 	// Arguments:   - data: message data
 	//--------------------------------------------------------------------------
 	UFUNCTION(BlueprintPure, Category = "ROS")
-		void get_contents(UHeader*& header, TArray<float>& axes, TArray<int>& buttons)
+	void get_contents(float& data)
 	{
-		header = m_header;
-		axes = m_axes;
-		buttons.Empty();
-		for (size_t i = 0; i < m_buttons.Num(); i++)
-			buttons.Add(static_cast<int>(m_buttons[i]));
-
+		data = static_cast<float>(m_data);
 	}
 
 	//--------------------------------------------------------------------------
@@ -107,19 +82,13 @@ public:
 	// Arguments:   - data: message data
 	//--------------------------------------------------------------------------
 	UFUNCTION(BlueprintCallable, Category = "ROS")
-		void set_contents(UHeader* header, TArray<float> axes, TArray<int> buttons)
+	void set_contents(float data)
 	{
-		m_header = header;
-		m_axes = axes;
-		m_buttons.Empty();
-		for (size_t i = 0; i < buttons.Num(); i++)
-			m_buttons.Add(static_cast<int32_t>(buttons[i]));
+		m_data = static_cast<double>(data);
 	}
 
 private:
 
-	UHeader* m_header;
-	TArray<float> m_axes;
-	TArray<int32_t> m_buttons;
+	double m_data;
 
 };

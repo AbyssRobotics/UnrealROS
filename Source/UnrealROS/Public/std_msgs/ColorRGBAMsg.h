@@ -1,7 +1,7 @@
 //==============================================================================
 // Unreal ROS Plugin
 //
-// Description: Defines the std_msgs/Int32 ROS message and its 
+// Description: Defines the std_msgs/ColorRGBA ROS message and its 
 //              interface with JSON.
 //==============================================================================
 
@@ -9,14 +9,14 @@
 
 #include "CoreMinimal.h"
 #include "RosMessageBase.h"
-#include "Int32.generated.h"
+#include "ColorRGBAMsg.generated.h"
 
 //==============================================================================
 //                              CLASS DECLARATION
 //==============================================================================
 
 UCLASS(BlueprintType)
-class UNREALROS_API UInt32 : public URosMessageBase
+class UNREALROS_API UColorRGBAMsg : public URosMessageBase
 {
 
 	GENERATED_BODY()
@@ -24,19 +24,19 @@ class UNREALROS_API UInt32 : public URosMessageBase
 public:
 
 	//--------------------------------------------------------------------------
-	// Name:        UInt32 constructor
+	// Name:        UColorRGBAMsg constructor
 	// Description: Default constructor.
 	//--------------------------------------------------------------------------
-	UInt32() : URosMessageBase("std_msgs/Int32")
+	UColorRGBAMsg() : URosMessageBase("std_msgs/ColorRGBA")
 	{
 
 	};
 
 	//--------------------------------------------------------------------------
-	// Name:        UInt32 destructor
+	// Name:        UColorRGBAMsg destructor
 	// Description: Default destructor.
 	//--------------------------------------------------------------------------
-	~UInt32() override
+	~UColorRGBAMsg() override
 	{
 
 	}

@@ -1,27 +1,22 @@
 //==============================================================================
 // Unreal ROS Plugin
 //
-// Description: Defines the std_msgs/MultiArrayLayout ROS message and its 
+// Description: Defines the std_msgs/Int32 ROS message and its 
 //              interface with JSON.
 //==============================================================================
+
 #pragma once
 
-// ROS message base class
-#include "RosMessageBase.h"
-
-// Message dependencies
-#include "MultiArrayDimension.h"
-
-// UE4 imports
 #include "CoreMinimal.h"
-#include "MultiArrayLayout.generated.h"
+#include "RosMessageBase.h"
+#include "Int32Msg.generated.h"
 
 //==============================================================================
 //                              CLASS DECLARATION
 //==============================================================================
 
 UCLASS(BlueprintType)
-class UNREALROS_API UMultiArrayLayout : public URosMessageBase
+class UNREALROS_API UInt32Msg : public URosMessageBase
 {
 
 	GENERATED_BODY()
@@ -29,19 +24,19 @@ class UNREALROS_API UMultiArrayLayout : public URosMessageBase
 public:
 
 	//--------------------------------------------------------------------------
-	// Name:        UMultiArrayLayout constructor
+	// Name:        UInt32Msg constructor
 	// Description: Default constructor.
 	//--------------------------------------------------------------------------
-	UMultiArrayLayout() : URosMessageBase("std_msgs/MultiArrayLayout")
+	UInt32Msg() : URosMessageBase("std_msgs/Int32")
 	{
 
 	};
 
 	//--------------------------------------------------------------------------
-	// Name:        UMultiArrayLayout destructor
+	// Name:        UInt32Msg destructor
 	// Description: Default destructor.
 	//--------------------------------------------------------------------------
-	~UMultiArrayLayout() override
+	~UInt32Msg() override
 	{
 
 	}
@@ -53,18 +48,8 @@ public:
 	//--------------------------------------------------------------------------
 	json get_json() override
 	{
-
 		json json;
-
-		auto dim_array = json::array();
-		for (int i = 0; i < m_dim.Num(); ++i)
-			dim_array.push_back(m_dim[i]->get_json());
-
-		json["dim"] = dim_array;
-		json["data_offset"] = m_data_offset;
-
 		return json;
-
 	}
 
 	//--------------------------------------------------------------------------
@@ -72,21 +57,8 @@ public:
 	// Description: Populates the message fields from the given JSON object.
 	// Arguments:   - json: JSON object to populate message fields from
 	//--------------------------------------------------------------------------
-	void from_json(json json_message) override
+	void from_json(json json) override
 	{
-
-		json dim_array = json_message["dim"];
-		std::string test = dim_array.dump();
-		TArray<UMultiArrayDimension*> dim;
-		for (const auto& item : dim_array)
-		{
-			UMultiArrayDimension* new_dim = NewObject<UMultiArrayDimension>();
-			new_dim->from_json(item);
-			dim.Push(new_dim);
-		}
-
-		m_dim = dim;
-		m_data_offset = json_message["data_offset"];
 
 	}
 
@@ -96,10 +68,9 @@ public:
 	// Arguments:   - data: message data
 	//--------------------------------------------------------------------------
 	UFUNCTION(BlueprintPure, Category = "ROS")
-	void get_contents(TArray<UMultiArrayDimension*>& dim, int& data_offset)
+		void get_contents(int& data)
 	{
-		dim = m_dim;
-		data_offset = static_cast<int>(m_data_offset);
+
 	}
 
 	//--------------------------------------------------------------------------
@@ -108,18 +79,13 @@ public:
 	// Arguments:   - data: message data
 	//--------------------------------------------------------------------------
 	UFUNCTION(BlueprintCallable, Category = "ROS")
-	void set_contents(TArray<UMultiArrayDimension*> dim, int data_offset)
+		void set_contents(int data)
 	{
-		m_dim = dim;
-		m_data_offset = static_cast<uint32>(data_offset);
+
 	}
 
 private:
 
-	// Array of dimension properties
-	TArray<UMultiArrayDimension*> m_dim;
 
-	// Padding elements at front of data
-	uint32 m_data_offset;
 
 };

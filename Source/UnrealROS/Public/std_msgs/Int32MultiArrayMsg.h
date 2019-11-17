@@ -1,7 +1,7 @@
 //==============================================================================
 // Unreal ROS Plugin
 //
-// Description: Defines the std_msgs/Int16 ROS message and its 
+// Description: Defines the std_msgs/Int32MultiArray ROS message and its 
 //              interface with JSON.
 //==============================================================================
 
@@ -9,14 +9,14 @@
 
 #include "CoreMinimal.h"
 #include "RosMessageBase.h"
-#include "Int16.generated.h"
+#include "Int32MultiArrayMsg.generated.h"
 
 //==============================================================================
 //                              CLASS DECLARATION
 //==============================================================================
 
 UCLASS(BlueprintType)
-class UNREALROS_API UInt16 : public URosMessageBase
+class UNREALROS_API UInt32MultiArrayMsg : public URosMessageBase
 {
 
 	GENERATED_BODY()
@@ -24,19 +24,19 @@ class UNREALROS_API UInt16 : public URosMessageBase
 public:
 
 	//--------------------------------------------------------------------------
-	// Name:        UInt16 constructor
+	// Name:        UInt32MultiArrayMsg constructor
 	// Description: Default constructor.
 	//--------------------------------------------------------------------------
-	UInt16() : URosMessageBase("std_msgs/Int16")
+	UInt32MultiArrayMsg() : URosMessageBase("std_msgs/Int32MultiArray")
 	{
 
 	};
 
 	//--------------------------------------------------------------------------
-	// Name:        UInt16 destructor
+	// Name:        UInt32MultiArrayMsg destructor
 	// Description: Default destructor.
 	//--------------------------------------------------------------------------
-	~UInt16() override
+	~UInt32MultiArrayMsg() override
 	{
 
 	}

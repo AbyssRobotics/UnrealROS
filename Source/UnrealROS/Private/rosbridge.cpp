@@ -366,30 +366,78 @@ void URosbridge::TickComponent(float DeltaTime, enum ELevelTick TickType,
 		// Convert the received data buffer into a std::string so that it can
 		// be fed into a stringstream
 		std::string received_string((char*)received_data.GetData());
+		receive_buffer += received_string;
+
+		size_t json_start_pos = receive_buffer.find_first_of('{');
+
+		try
+		{
+
+
+
+		//while (received_string.length() > 0)
+		//{
+
+			size_t json_stop_pos = std::string::npos;
+			size_t num_open = 1;
+			for (size_t i = 1; i < received_string.length(); i++)
+			{
+				if (received_string[i] == '{')
+					num_open++;
+				if (received_string[i] == '}')
+					num_open--;
+				if (num_open == 0)
+				{
+					json_stop_pos = i;
+					break;
+				}
+			}
+
+			if (json_stop_pos == std::string::npos)
+				return;
+
+			std::string json_string = received_string.substr(0, json_stop_pos + 1);
+			//print(FColor::Yellow, FString::Printf(TEXT("json_string (%d)(%d)(%s)"), json_start_pos, json_stop_pos, *FString(json_string.c_str())));
+			
+			nlohmann::json json_message = nlohmann::json::parse(json_string);
+			handle_received_json(json_message);
+
+			print(FColor::Yellow, FString::Printf(TEXT("before erase %d"), received_string.length()));
+			received_string.erase(json_stop_pos + 1);
+			print(FColor::Yellow, FString::Printf(TEXT("after erase %d"), received_string.length()));
+
+		}
+		catch (const std::exception & ex)
+		{
+			FString reason(ex.what());
+			print(FColor::Yellow, FString::Printf(TEXT("%s"), *reason));
+		}
+
+		//}
 
 		// Create a string stream and add the received string to it. This is
 		// done so that the stream input to the JSON type can be used since
 		// more than one JSON object can be present in the received data
-		std::stringstream received_string_stream;
-		received_string_stream << received_string;
+		//std::stringstream received_string_stream;
+		//received_string_stream << received_string;
 
-		// Attempt to parse the string stream into JSON structures
-		try
-		{
+		//// Attempt to parse the string stream into JSON structures
+		//try
+		//{
 
-			// Loop through all JSON messages in the string stream. Will throw
-			// an exception when it reaches the end.
-			// TODO: Handle the end of the stream more elegantly
-			nlohmann::json json_message;
-			while (received_string_stream >> json_message)
-				handle_received_json(json_message);
+		//	// Loop through all JSON messages in the string stream. Will throw
+		//	// an exception when it reaches the end.
+		//	// TODO: Handle the end of the stream more elegantly
+		//	nlohmann::json json_message;
+		//	while (received_string_stream >> json_message)
+		//		handle_received_json(json_message);
 
-		}
-		catch (const std::exception& ex)
-		{
-			// Surpress the JSON warning
-			FString reason(ex.what());
-		}
+		//}
+		//catch (const std::exception& ex)
+		//{
+		//	// Surpress the JSON warning
+		//	FString reason(ex.what());
+		//}
 
 	}
 

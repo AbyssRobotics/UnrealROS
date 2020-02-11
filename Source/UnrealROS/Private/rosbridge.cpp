@@ -363,81 +363,76 @@ void URosbridge::TickComponent(float DeltaTime, enum ELevelTick TickType,
 		int32 num_bytes_read;
 		tcp_socket->Recv(received_data.GetData(), received_data.Num(), num_bytes_read);
 
-		// Convert the received data buffer into a std::string so that it can
-		// be fed into a stringstream
+		// Convert the received data buffer into a std::string and add it to the 
+		// receive buffer for processing
 		std::string received_string((char*)received_data.GetData());
 		receive_buffer += received_string;
 
-		size_t json_start_pos = receive_buffer.find_first_of('{');
+		// Assume the received buffer can contain more than one JSON object with 
+		// random characters between them. We must loop through the receive
+		// buffer and extract every JSON object by locating the opening bracket
+		// and closing bracket. Since there may be brackets in between, we must 
+		// keep track of the number of opened brackets and find when the last one
+		// has been closed to find the end of the JSON object
+		size_t json_start_pos = std::string::npos;
+		size_t json_stop_pos = std::string::npos;
+		std::string json_string;
 
 		try
 		{
 
-
-
-		//while (received_string.length() > 0)
-		//{
-
-			size_t json_stop_pos = std::string::npos;
-			size_t num_open = 1;
-			for (size_t i = 1; i < received_string.length(); i++)
+			// Locate the first opening bracket in the receive buffer, 
+			// indicating the start of the JSON object. Repeat for every
+			// JSON object in the receive buffer
+			json_start_pos = receive_buffer.find_first_of('{');
+			while (json_start_pos != std::string::npos)
 			{
-				if (received_string[i] == '{')
-					num_open++;
-				if (received_string[i] == '}')
-					num_open--;
-				if (num_open == 0)
+
+
+				// Find the last closing bracket that closes the first
+				// opening bracket by keeping a count of how many brackets
+				// are left open
+				json_stop_pos = std::string::npos;
+				size_t num_open_brackets = 1;
+				for (size_t i = json_start_pos + 1; i < receive_buffer.length(); i++)
 				{
-					json_stop_pos = i;
-					break;
+					if (receive_buffer[i] == '{')
+						num_open_brackets++;
+					if (receive_buffer[i] == '}')
+						num_open_brackets--;
+					if (num_open_brackets == 0)
+					{
+						json_stop_pos = i;
+						break;
+					}
 				}
+
+				// If there is an unbalanced number of brackets, move on
+				// and do not parse the JSON object since it is incomplete
+				if (json_stop_pos == std::string::npos)
+					return;
+
+				// Extract the JSON object string between the open and close brackets
+				// and parse it into a JSON object to be handled
+				json_string = receive_buffer.substr(json_start_pos, json_stop_pos - json_start_pos + 1);
+				nlohmann::json json_message = nlohmann::json::parse(json_string);
+				handle_received_json(json_message);
+
+				// Remove the parts that have been parsed from the receive buffer and 
+				// find the start of the next JSON object in the received string if there
+				// is one
+				receive_buffer.erase(0, json_stop_pos + 1);
+				json_start_pos = receive_buffer.find_first_of('{');
+
 			}
-
-			if (json_stop_pos == std::string::npos)
-				return;
-
-			std::string json_string = received_string.substr(0, json_stop_pos + 1);
-			//print(FColor::Yellow, FString::Printf(TEXT("json_string (%d)(%d)(%s)"), json_start_pos, json_stop_pos, *FString(json_string.c_str())));
-			
-			nlohmann::json json_message = nlohmann::json::parse(json_string);
-			handle_received_json(json_message);
-
-			print(FColor::Yellow, FString::Printf(TEXT("before erase %d"), received_string.length()));
-			received_string.erase(json_stop_pos + 1);
-			print(FColor::Yellow, FString::Printf(TEXT("after erase %d"), received_string.length()));
 
 		}
 		catch (const std::exception & ex)
 		{
 			FString reason(ex.what());
-			print(FColor::Yellow, FString::Printf(TEXT("%s"), *reason));
+			FString buffer_string(json_string.c_str());
+			print(FColor::Yellow, FString::Printf(TEXT("failed to parse received JSON string %d %d (%s)"), json_start_pos, json_stop_pos, *buffer_string));
 		}
-
-		//}
-
-		// Create a string stream and add the received string to it. This is
-		// done so that the stream input to the JSON type can be used since
-		// more than one JSON object can be present in the received data
-		//std::stringstream received_string_stream;
-		//received_string_stream << received_string;
-
-		//// Attempt to parse the string stream into JSON structures
-		//try
-		//{
-
-		//	// Loop through all JSON messages in the string stream. Will throw
-		//	// an exception when it reaches the end.
-		//	// TODO: Handle the end of the stream more elegantly
-		//	nlohmann::json json_message;
-		//	while (received_string_stream >> json_message)
-		//		handle_received_json(json_message);
-
-		//}
-		//catch (const std::exception& ex)
-		//{
-		//	// Surpress the JSON warning
-		//	FString reason(ex.what());
-		//}
 
 	}
 

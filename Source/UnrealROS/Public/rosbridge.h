@@ -151,7 +151,7 @@ private:
 	// Socket instance for TCP communication
 	FSocket* tcp_socket;
 
-	// Buffer for received JSON strings
+	// Receive buffer for bytes received over TCP
 	std::string receive_buffer;
 
 	// Map between a string representing a ROS message type and a UClass that 

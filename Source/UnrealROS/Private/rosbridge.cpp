@@ -357,7 +357,7 @@ void URosbridge::TickComponent(float DeltaTime, enum ELevelTick TickType,
 
 		// Initialize the received data buffer to hold the number of pending bytes
 		TArray<uint8> received_data;
-		received_data.Init(0, num_pending_bytes);
+		received_data.Init(0, FMath::Min(num_pending_bytes, 65507u));
 
 		// Receive the data from the socket
 		int32 num_bytes_read;
@@ -365,7 +365,11 @@ void URosbridge::TickComponent(float DeltaTime, enum ELevelTick TickType,
 
 		// Convert the received data buffer into a std::string and add it to the 
 		// receive buffer for processing
-		std::string received_string((char*)received_data.GetData());
+		received_data.Add(0);
+		FString received_fstring = FString(ANSI_TO_TCHAR(reinterpret_cast<const char*>(received_data.GetData())));
+		std::string received_string(TCHAR_TO_UTF8(*received_fstring));
+
+		//std::string received_string((char*)received_data.GetData());
 		receive_buffer += received_string;
 
 		// Assume the received buffer can contain more than one JSON object with 
@@ -378,60 +382,58 @@ void URosbridge::TickComponent(float DeltaTime, enum ELevelTick TickType,
 		size_t json_stop_pos = std::string::npos;
 		std::string json_string;
 
-		try
+		// Locate the first opening bracket in the receive buffer, 
+		// indicating the start of the JSON object. Repeat for every
+		// JSON object in the receive buffer
+		json_start_pos = receive_buffer.find_first_of('{');
+		while (json_start_pos != std::string::npos)
 		{
 
-			// Locate the first opening bracket in the receive buffer, 
-			// indicating the start of the JSON object. Repeat for every
-			// JSON object in the receive buffer
-			json_start_pos = receive_buffer.find_first_of('{');
-			while (json_start_pos != std::string::npos)
+			// Find the last closing bracket that closes the first
+			// opening bracket by keeping a count of how many brackets
+			// are left open
+			json_stop_pos = std::string::npos;
+			size_t num_open_brackets = 1;
+			for (size_t i = json_start_pos + 1; i < receive_buffer.length(); i++)
 			{
-
-
-				// Find the last closing bracket that closes the first
-				// opening bracket by keeping a count of how many brackets
-				// are left open
-				json_stop_pos = std::string::npos;
-				size_t num_open_brackets = 1;
-				for (size_t i = json_start_pos + 1; i < receive_buffer.length(); i++)
+				if (receive_buffer[i] == '{')
+					num_open_brackets++;
+				if (receive_buffer[i] == '}')
+					num_open_brackets--;
+				if (num_open_brackets == 0)
 				{
-					if (receive_buffer[i] == '{')
-						num_open_brackets++;
-					if (receive_buffer[i] == '}')
-						num_open_brackets--;
-					if (num_open_brackets == 0)
-					{
-						json_stop_pos = i;
-						break;
-					}
+					json_stop_pos = i;
+					break;
 				}
-
-				// If there is an unbalanced number of brackets, move on
-				// and do not parse the JSON object since it is incomplete
-				if (json_stop_pos == std::string::npos)
-					return;
-
-				// Extract the JSON object string between the open and close brackets
-				// and parse it into a JSON object to be handled
-				json_string = receive_buffer.substr(json_start_pos, json_stop_pos - json_start_pos + 1);
-				nlohmann::json json_message = nlohmann::json::parse(json_string);
-				handle_received_json(json_message);
-
-				// Remove the parts that have been parsed from the receive buffer and 
-				// find the start of the next JSON object in the received string if there
-				// is one
-				receive_buffer.erase(0, json_stop_pos + 1);
-				json_start_pos = receive_buffer.find_first_of('{');
-
 			}
 
-		}
-		catch (const std::exception & ex)
-		{
-			FString reason(ex.what());
-			FString buffer_string(json_string.c_str());
-			print(FColor::Yellow, FString::Printf(TEXT("failed to parse received JSON string %d %d (%s)"), json_start_pos, json_stop_pos, *buffer_string));
+			// If there is an unbalanced number of brackets, move on
+			// and do not parse the JSON object since it is incomplete
+			if (json_stop_pos == std::string::npos)
+				return;
+
+			// Extract the JSON object string between the open and close brackets
+			// and parse it into a JSON object to be handled
+			json_string = receive_buffer.substr(json_start_pos, json_stop_pos - json_start_pos + 1);
+
+			try
+			{
+				nlohmann::json json_message = nlohmann::json::parse(json_string);
+				handle_received_json(json_message);
+			}
+			catch (const std::exception & ex)
+			{
+				FString reason(ex.what());
+				FString buffer_string(json_string.c_str());
+				print(FColor::Yellow, FString::Printf(TEXT("failed to parse received JSON string %d %d (%s)"), json_start_pos, json_stop_pos, *buffer_string));
+			}
+
+			// Remove the parts that have been parsed from the receive buffer and 
+			// find the start of the next JSON object in the received string if there
+			// is one
+			receive_buffer.erase(0, json_stop_pos + 1);
+			json_start_pos = receive_buffer.find_first_of('{');
+
 		}
 
 	}

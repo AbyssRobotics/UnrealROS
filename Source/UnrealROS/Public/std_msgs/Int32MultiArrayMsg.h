@@ -4,11 +4,16 @@
 // Description: Defines the std_msgs/Int32MultiArray ROS message and its 
 //              interface with JSON.
 //==============================================================================
-
 #pragma once
 
-#include "CoreMinimal.h"
+// ROS message base class
 #include "RosMessageBase.h"
+
+// Message dependencies
+#include "MultiArrayLayoutMsg.h"
+
+// UE4 imports
+#include "CoreMinimal.h"
 #include "Int32MultiArrayMsg.generated.h"
 
 //==============================================================================
@@ -29,7 +34,7 @@ public:
 	//--------------------------------------------------------------------------
 	UInt32MultiArrayMsg() : URosMessageBase("std_msgs/Int32MultiArray")
 	{
-
+		m_layout = NewObject<UMultiArrayLayoutMsg>();
 	};
 
 	//--------------------------------------------------------------------------
@@ -49,6 +54,9 @@ public:
 	json get_json() override
 	{
 		json json;
+		json["layout"] = m_layout->get_json();
+		for (auto item : m_data)
+			json["data"].push_back(item);
 		return json;
 	}
 
@@ -60,6 +68,14 @@ public:
 	void from_json(json json) override
 	{
 
+		UMultiArrayLayoutMsg* layout = NewObject<UMultiArrayLayoutMsg>();
+		layout->from_json(json["layout"]);
+		m_layout = layout;
+
+		m_data.Empty();
+		for (auto item : json["data"])
+			m_data.Push(item);
+
 	}
 
 	//--------------------------------------------------------------------------
@@ -68,9 +84,12 @@ public:
 	// Arguments:   - data: message data
 	//--------------------------------------------------------------------------
 	UFUNCTION(BlueprintPure, Category = "ROS")
-		void get_contents(int& data)
+		void get_contents(UMultiArrayLayoutMsg*& layout, TArray<int>& data)
 	{
-
+		layout = m_layout;
+		data.Empty();
+		for (size_t i = 0; i < m_data.Num(); i++)
+			data.Add(static_cast<int>(m_data[i]));
 	}
 
 	//--------------------------------------------------------------------------
@@ -79,13 +98,20 @@ public:
 	// Arguments:   - data: message data
 	//--------------------------------------------------------------------------
 	UFUNCTION(BlueprintCallable, Category = "ROS")
-		void set_contents(int data)
+		void set_contents(UMultiArrayLayoutMsg* layout, TArray<int> data)
 	{
-
+		m_layout = layout;
+		m_data.Empty();
+		for (size_t i = 0; i < data.Num(); i++)
+			m_data.Add(static_cast<int32_t>(data[i]));
 	}
 
 private:
 
+	// Specification of data layout
+	UMultiArrayLayoutMsg* m_layout;
 
+	// Array of data
+	TArray<int32_t> m_data;
 
 };

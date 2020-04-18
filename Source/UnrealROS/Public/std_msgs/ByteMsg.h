@@ -85,11 +85,11 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "ROS")
 		void set_contents(int data)
 	{
-		m_data = static_cast<int8>(data);
+		m_data = static_cast<int8_t>(data);
 	}
 
 private:
 
-	int8 m_data;
+	int8_t m_data;
 
 };

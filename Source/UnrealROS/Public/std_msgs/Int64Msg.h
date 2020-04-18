@@ -1,14 +1,16 @@
 //==============================================================================
 // Unreal ROS Plugin
 //
-// Description: Defines the std_msgs/Int64 ROS message and its 
-//              interface with JSON.
+// Description: Defines the std_msgs/Int64 ROS message and its interface with
+//              JSON.
 //==============================================================================
-
 #pragma once
 
-#include "CoreMinimal.h"
+// ROS message base class
 #include "RosMessageBase.h"
+
+// UE4 imports
+#include "CoreMinimal.h"
 #include "Int64Msg.generated.h"
 
 //==============================================================================
@@ -30,7 +32,7 @@ public:
 	UInt64Msg() : URosMessageBase("std_msgs/Int64")
 	{
 
-	};
+	}
 
 	//--------------------------------------------------------------------------
 	// Name:        UInt64Msg destructor
@@ -49,6 +51,7 @@ public:
 	json get_json() override
 	{
 		json json;
+		json["data"] = m_data;
 		return json;
 	}
 
@@ -59,7 +62,7 @@ public:
 	//--------------------------------------------------------------------------
 	void from_json(json json) override
 	{
-
+		m_data = json["data"];
 	}
 
 	//--------------------------------------------------------------------------
@@ -68,9 +71,9 @@ public:
 	// Arguments:   - data: message data
 	//--------------------------------------------------------------------------
 	UFUNCTION(BlueprintPure, Category = "ROS")
-		void get_contents(int& data)
+	void get_contents(int& data)
 	{
-
+		data = static_cast<int>(m_data);
 	}
 
 	//--------------------------------------------------------------------------
@@ -79,13 +82,13 @@ public:
 	// Arguments:   - data: message data
 	//--------------------------------------------------------------------------
 	UFUNCTION(BlueprintCallable, Category = "ROS")
-		void set_contents(int data)
+	void set_contents(int data)
 	{
-
+		m_data = static_cast<int64_t>(data);
 	}
 
 private:
 
-
+	int64_t m_data;
 
 };

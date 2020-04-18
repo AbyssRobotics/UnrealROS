@@ -34,7 +34,7 @@ public:
 	//--------------------------------------------------------------------------
 	UMultiArrayLayoutMsg() : URosMessageBase("std_msgs/MultiArrayLayout")
 	{
-
+		m_dim.Add(NewObject<UMultiArrayDimensionMsg>());
 	};
 
 	//--------------------------------------------------------------------------
@@ -76,7 +76,6 @@ public:
 	{
 
 		json dim_array = json_message["dim"];
-		std::string test = dim_array.dump();
 		TArray<UMultiArrayDimensionMsg*> dim;
 		for (const auto& item : dim_array)
 		{
@@ -120,6 +119,6 @@ private:
 	TArray<UMultiArrayDimensionMsg*> m_dim;
 
 	// Padding elements at front of data
-	uint32 m_data_offset;
+	uint32 m_data_offset = 0;
 
 };

@@ -34,7 +34,7 @@ public:
 	//--------------------------------------------------------------------------
 	UFloat64MultiArrayMsg() : URosMessageBase("std_msgs/Float64MultiArray")
 	{
-
+		m_layout = NewObject<UMultiArrayLayoutMsg>();
 	};
 
 	//--------------------------------------------------------------------------
@@ -55,10 +55,9 @@ public:
 	{
 		json json;
 		json["layout"] = m_layout->get_json();
-		for (double item : m_data)
+		for (auto item : m_data)
 			json["data"].push_back(item);
 		return json;
-
 	}
 
 	//--------------------------------------------------------------------------
@@ -66,15 +65,15 @@ public:
 	// Description: Populates the message fields from the given JSON object.
 	// Arguments:   - json: JSON object to populate message fields from
 	//--------------------------------------------------------------------------
-	void from_json(json json_message) override
+	void from_json(json json) override
 	{
 
 		UMultiArrayLayoutMsg* layout = NewObject<UMultiArrayLayoutMsg>();
-		layout->from_json(json_message["layout"]);
+		layout->from_json(json["layout"]);
 		m_layout = layout;
 
 		m_data.Empty();
-		for (double item : json_message["data"])
+		for (auto item : json["data"])
 			m_data.Push(item);
 
 	}
@@ -91,7 +90,6 @@ public:
 		data.Empty();
 		for (size_t i = 0; i < m_data.Num(); i++)
 			data.Add(static_cast<float>(m_data[i]));
-
 	}
 
 	//--------------------------------------------------------------------------

@@ -150,6 +150,13 @@ void URosbridge::unadvertise(FString topic)
 void URosbridge::publish(FString topic, UPARAM(ref) URosMessageBase* message)
 {
 
+	// Ensure that there is a message connected
+	if (message == nullptr)
+	{
+		print(FColor::Red, FString::Printf(TEXT("publish: a message to publish must be specified")));
+		return;
+	}
+
 	// Ensure the TCP socket is connected
 	if (!socket_connected)
 	{
@@ -161,7 +168,19 @@ void URosbridge::publish(FString topic, UPARAM(ref) URosMessageBase* message)
 	json json_message;
 	json_message["op"] = "publish";
 	json_message["topic"] = std::string(TCHAR_TO_UTF8(*topic));
-	json_message["msg"] = message->get_json();
+
+	try
+	{
+		json_message["msg"] = message->get_json();
+	}
+	catch (...)
+	{ 
+		print(FColor::Red, FString::Printf(TEXT("publish: unable to convert message to JSON (%s)"), *(message->type)));
+		return;
+	}
+
+	std::string s = message->get_json().dump();
+	print(FColor::Green, FString(s.c_str()));
 
 	// Convert the JSON object to an array of bytes
 	std::string json_string = json_message.dump();
@@ -335,7 +354,7 @@ void URosbridge::BeginPlay()
 		FString message_type = message_instance->type;
 		message_type_map[message_type] = message_class;
 
-		print(FColor::Turquoise, message_type);
+		// print(FColor::Turquoise, message_type);
 
 	}
 

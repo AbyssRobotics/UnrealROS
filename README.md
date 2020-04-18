@@ -17,9 +17,17 @@ To install this plugin into an Unreal Engine project follow these steps:
 Launch the project. You should be prompted to re-compile the project which should complete successfully. The plugin is now ready to use in the Unreal Engine editor.
 
 # Usage
-To use the rosbridge actor component, create or edit an Actor blueprint. In the Actor's editing window, press `Add Component` and select the `Rosbridge` component. The component must first be connected to a remote rosbridge session. See [rosbridge](http://wiki.ros.org/rosbridge_suite) documentation on how to launch rosbridge. The image below shows the rosbridge component being connected to rosbridge running on a computer with IP address `192.168.1.10` on port `9090`.
+To use the rosbridge actor component, create or edit an Actor blueprint. In the Actor's editing window, press `Add Component` and select the `Rosbridge` component as shown in the below image.
 
-<image here>
+<h1 align="center">
+  <img src="https://raw.githubusercontent.com/AbyssRobotics/UnrealROS/master/Resources/add_component.png">
+</h1>
+
+The component must first be connected to a remote rosbridge session. See [rosbridge](http://wiki.ros.org/rosbridge_suite) documentation on how to launch rosbridge. The image below shows the rosbridge component being connected to rosbridge running on a computer with IP address `192.168.1.10` on port `9090`.
+
+<h1 align="center">
+  <img src="https://raw.githubusercontent.com/AbyssRobotics/UnrealROS/master/Resources/connect.png">
+</h1>
 
 After being connected, the rosbridge component can be used for publish/scubscribe functionality. 
 
@@ -33,7 +41,9 @@ To publish a message, the following steps must be followed:
 
 These steps are shown in the image below.
 
-<image here>
+<h1 align="center">
+  <img src="https://raw.githubusercontent.com/AbyssRobotics/UnrealROS/master/Resources/publish.png">
+</h1>
   
 This will publish the message over rosbirgde into the ROS system. 
 
@@ -47,6 +57,8 @@ To subscribe to a message, use the following process:
 
 The following image illustrates the subscription process:
 
-<image here>
+<h1 align="center">
+  <img src="https://raw.githubusercontent.com/AbyssRobotics/UnrealROS/master/Resources/subscribe.png">
+</h1>
   
 Whenever a message is published to the topic that is being subscribed to, the callback event will be triggered and the message will be passed to the `Message` pin. This message is a RosMessageBase type and must be cast to the expected message type in order to get the message contents correctly.

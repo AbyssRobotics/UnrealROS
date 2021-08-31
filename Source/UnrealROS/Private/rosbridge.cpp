@@ -179,8 +179,8 @@ void URosbridge::publish(FString topic, UPARAM(ref) URosMessageBase* message)
 		return;
 	}
 
-	std::string s = message->get_json().dump();
-	print(FColor::Green, FString(s.c_str()));
+	//std::string s = message->get_json().dump();
+	//print(FColor::Green, FString(s.c_str()));
 
 	// Convert the JSON object to an array of bytes
 	std::string json_string = json_message.dump();

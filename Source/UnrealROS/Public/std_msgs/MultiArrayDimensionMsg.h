@@ -99,12 +99,12 @@ public:
 private:
 
 	// Label of given dimension
-	FString m_label;
+	FString m_label = "";
 
 	// Size of given dimension(in type units)
-	uint32 m_size;
+	uint32 m_size = 0;
 
 	// Stride of given dimension
-	uint32 m_stride;
+	uint32 m_stride = 0;
 
 };

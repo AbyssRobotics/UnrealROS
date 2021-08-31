@@ -49,6 +49,10 @@ public:
 	json get_json() override
 	{
 		json json;
+		json["r"] = m_r;
+		json["g"] = m_g;
+		json["b"] = m_b;
+		json["a"] = m_a;
 		return json;
 	}
 
@@ -59,7 +63,10 @@ public:
 	//--------------------------------------------------------------------------
 	void from_json(json json) override
 	{
-
+		m_r = json["r"];
+		m_g = json["g"];
+		m_b = json["b"];
+		m_a = json["a"];
 	}
 
 	//--------------------------------------------------------------------------
@@ -68,9 +75,12 @@ public:
 	// Arguments:   - data: message data
 	//--------------------------------------------------------------------------
 	UFUNCTION(BlueprintPure, Category = "ROS")
-		void get_contents(int& data)
+	void get_contents(float& r, float& g, float& b, float& a)
 	{
-
+		r = m_r;
+		g = m_g;
+		b = m_b;
+		a = m_a;
 	}
 
 	//--------------------------------------------------------------------------
@@ -79,13 +89,20 @@ public:
 	// Arguments:   - data: message data
 	//--------------------------------------------------------------------------
 	UFUNCTION(BlueprintCallable, Category = "ROS")
-		void set_contents(int data)
+	void set_contents(float r, float g, float b, float a)
 	{
-
+		m_r = r;
+		m_g = g;
+		m_b = b;
+		m_a = a;
 	}
 
 private:
 
+	float m_r;
+	float m_g;
+	float m_b;
+	float m_a;
 
 
 };

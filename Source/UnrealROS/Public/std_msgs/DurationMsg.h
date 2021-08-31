@@ -49,6 +49,8 @@ public:
 	json get_json() override
 	{
 		json json;
+		json["data"]["secs"] = m_secs;
+		json["data"]["nsecs"] = m_nsecs;
 		return json;
 	}
 
@@ -59,7 +61,8 @@ public:
 	//--------------------------------------------------------------------------
 	void from_json(json json) override
 	{
-
+		m_secs = json["data"]["secs"];
+		m_nsecs = json["data"]["nsecs"];
 	}
 
 	//--------------------------------------------------------------------------
@@ -68,9 +71,10 @@ public:
 	// Arguments:   - data: message data
 	//--------------------------------------------------------------------------
 	UFUNCTION(BlueprintPure, Category = "ROS")
-		void get_contents(int& data)
+		void get_contents(int& secs, int& nsecs)
 	{
-
+		secs = static_cast<int>(m_secs);
+		nsecs = static_cast<int>(m_nsecs);
 	}
 
 	//--------------------------------------------------------------------------
@@ -79,13 +83,15 @@ public:
 	// Arguments:   - data: message data
 	//--------------------------------------------------------------------------
 	UFUNCTION(BlueprintCallable, Category = "ROS")
-		void set_contents(int data)
+		void set_contents(int secs, int nsecs)
 	{
-
+		m_secs = static_cast<int32_t>(secs);
+		m_nsecs = static_cast<int32_t>(nsecs);
 	}
 
 private:
 
-
+	int32_t m_secs;
+	int32_t m_nsecs;
 
 };

@@ -1,22 +1,24 @@
 //==============================================================================
 // Unreal ROS Plugin
 //
-// Description: Defines the std_msgs/Header ROS message and its 
-//              interface with JSON.
+// Description: Defines the std_msgs/UInt32 ROS message and its interface with
+//              JSON.
 //==============================================================================
-
 #pragma once
 
-#include "CoreMinimal.h"
+// ROS message base class
 #include "RosMessageBase.h"
-#include "HeaderMsg.generated.h"
+
+// UE4 imports
+#include "CoreMinimal.h"
+#include "UInt32Msg.generated.h"
 
 //==============================================================================
 //                              CLASS DECLARATION
 //==============================================================================
 
 UCLASS(BlueprintType)
-class UNREALROS_API UHeaderMsg : public URosMessageBase
+class UNREALROS_API UUInt32Msg : public URosMessageBase
 {
 
 	GENERATED_BODY()
@@ -24,19 +26,19 @@ class UNREALROS_API UHeaderMsg : public URosMessageBase
 public:
 
 	//--------------------------------------------------------------------------
-	// Name:        UHeaderMsg constructor
+	// Name:        UUInt32Msg constructor
 	// Description: Default constructor.
 	//--------------------------------------------------------------------------
-	UHeaderMsg() : URosMessageBase("std_msgs/Header")
+	UUInt32Msg() : URosMessageBase("std_msgs/UInt32")
 	{
 
-	};
+	}
 
 	//--------------------------------------------------------------------------
-	// Name:        UHeaderMsg destructor
+	// Name:        UUInt32Msg destructor
 	// Description: Default destructor.
 	//--------------------------------------------------------------------------
-	~UHeaderMsg() override
+	~UUInt32Msg() override
 	{
 
 	}
@@ -49,10 +51,7 @@ public:
 	json get_json() override
 	{
 		json json;
-		json["seq"] = m_seq;
-		json["stamp"]["secs"] = m_secs;
-		json["stamp"]["nsecs"] = m_nsecs;
-		json["frame_id"] = m_frame_id;
+		json["data"] = m_data;
 		return json;
 	}
 
@@ -63,10 +62,7 @@ public:
 	//--------------------------------------------------------------------------
 	void from_json(json json) override
 	{
-		m_seq = json["seq"];
-		m_secs = json["stamp"]["secs"];
-		m_nsecs = json["stamp"]["nsecs"];
-		m_frame_id = json["frame_id"].get<std::string>();
+		m_data = json["data"];
 	}
 
 	//--------------------------------------------------------------------------
@@ -75,12 +71,9 @@ public:
 	// Arguments:   - data: message data
 	//--------------------------------------------------------------------------
 	UFUNCTION(BlueprintPure, Category = "ROS")
-	void get_contents(int& seq, int& sec, int& nsec, FString& frame_id)
+		void get_contents(int& data)
 	{
-		seq = static_cast<int>(m_seq);
-		sec = static_cast<int>(m_secs);
-		nsec = static_cast<int>(m_nsecs);
-		frame_id = FString(m_frame_id.c_str());
+		data = static_cast<int>(m_data);
 	}
 
 	//--------------------------------------------------------------------------
@@ -89,19 +82,13 @@ public:
 	// Arguments:   - data: message data
 	//--------------------------------------------------------------------------
 	UFUNCTION(BlueprintCallable, Category = "ROS")
-	void set_contents(int seq, int secs, int nsecs, FString frame_id)
+		void set_contents(int data)
 	{
-		m_seq = static_cast<uint32>(seq);
-		m_secs = static_cast<int32>(secs);
-		m_nsecs = static_cast<int32>(nsecs);
-		m_frame_id = std::string(TCHAR_TO_UTF8(*frame_id));
+		m_data = static_cast<uint32_t>(data);
 	}
 
 private:
 
-	uint32 m_seq;
-	int32 m_secs;
-	int32 m_nsecs;
-	std::string m_frame_id;
+	uint32_t m_data;
 
 };

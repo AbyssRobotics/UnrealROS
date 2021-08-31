@@ -67,6 +67,7 @@ public:
 	virtual json get_json()
 	{
 		json json;
+		json = json::parse("{}");
 		return json;
 	}
 
